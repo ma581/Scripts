@@ -20,7 +20,9 @@ public class GrabAndDrop : MonoBehaviour {
 
         if (Physics.Linecast(position, target, out raycastHit))
         {
+            Debug.Log("Grabbed " + gameObject.name );
             return raycastHit.collider.gameObject;
+            
         }
         return null;
 
@@ -47,11 +49,11 @@ public class GrabAndDrop : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //Check if GetMouseHoverObject is working
-        Debug.Log(GetMouseHoverObject(5));
+       // Debug.Log(GetMouseHoverObject(5));
 
         if (Input.GetMouseButtonDown(1))
         {
-            Debug.Log("Mouse Clicked");
+            //Debug.Log("Mouse Clicked");
             if (grabbedObject == null)
             {
                 TryGrabObject(GetMouseHoverObject(5));
