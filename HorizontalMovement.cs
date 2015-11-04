@@ -36,6 +36,7 @@ public class HorizontalMovement : MonoBehaviour {
 
     void FixedUpdate() {
 
+        //Full movement in x z plane
             var movement = new Vector3( Input.GetAxis("Horizontal") * 10, 
                                         0,
                                         Input.GetAxis("Vertical") * 10);

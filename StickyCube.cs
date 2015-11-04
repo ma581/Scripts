@@ -13,6 +13,7 @@ public class StickyCube : MonoBehaviour {
 	
 	}
 
+
     void OnCollisionEnter(Collision col)
     {
 
