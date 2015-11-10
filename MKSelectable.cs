@@ -14,6 +14,7 @@ using System.Collections.Generic;
 [AddComponentMenu("MK/Object/MKSelectable")] //Adds Component Menu 
 public class MKSelectable : MonoBehaviour {
 
+    bool touched = false; //To see if the object was initially touched
 	protected bool rigidbodyWasKinematic;
 	public RUISWandSelector selector { get; protected set; }
 	public bool isSelected { get { return selector != null; } }
@@ -210,8 +211,57 @@ public class MKSelectable : MonoBehaviour {
         this.selector = null;
     }
 
-    public virtual void OnSelectionHighlight()
+    //Manoj ///////////
+    void OnCollisionEnter(Collision col)
     {
+        if (col.gameObject.tag != "Player") {
+            //Debug.Log(this.name + "Collided with " + col.gameObject.tag);
+            Debug.Log(this.name + " is no longer in contact with Player");
+            //if (highlightMaterial != null) {                 
+            //    //OnSelectionHighlightEnd(); //Removes highlight
+            //}
+
+            if (touched == true)
+            {           OnSelectionHighlightEnd(); //Removes highlight
+                        touched = false;
+            }
+
+
+        }
+
+        // Doesn't seem to detect RightHand
+        //if (col.gameObject.tag == "RightHand")
+        //{
+        //    Debug.Log(this.name + "Collided with " + col.gameObject.tag);
+        //    //GetComponent<Rigidbody>().isKinematic = true; // stop physics
+        //    //transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
+
+        //    OnSelectionHighlight(); // Highlights material that is collided
+        //}
+
+        if (col.gameObject.tag == "Player")
+        {
+            Debug.Log(this.name + "Collided with " + col.gameObject.tag);
+            //GetComponent<Rigidbody>().isKinematic = true; // stop physics
+            //transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
+
+            OnSelectionHighlight(); // Highlights material that is collided
+            touched = true;
+        }
+
+    }
+
+    void onCollisionExit(Collision col)
+    {
+        Debug.Log("No longer in contact with" + col.gameObject.tag);
+
+        OnSelectionHighlightEnd(); //Removes highlight
+    }
+    /////////
+
+    public virtual void OnSelectionHighlight()
+    {   
+
         if(highlightMaterial != null)
             AddMaterialToEverything(highlightMaterial);
     }
