@@ -20,6 +20,11 @@ public class HandObjectPickup : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (Input.GetMouseButton(0) == true)
+        {
+            Debug.Log("Mouse pressed");
+        }
+
 	
 	}
 
@@ -41,11 +46,12 @@ public class HandObjectPickup : MonoBehaviour {
     {
         Debug.Log(this.name + "Collided with " + col.gameObject.name);
 
-        if (col.gameObject.tag == "EnemyCube")
+        if (col.gameObject.tag == "EnemyCube") //if its pickable
         {
-            Debug.Log(this.name + "Collided with " + col.gameObject.name);
+            //Debug.Log(this.name + "Collided with " + col.gameObject.tag);
             //GetComponent<Rigidbody>().isKinematic = true; // stop physics
             //transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
+
         }
     }
 
@@ -54,7 +60,7 @@ public class HandObjectPickup : MonoBehaviour {
 
 
 
-    void OnTriggerStay(Collision collision)
+    void OnTriggerStay(Collider collision)
     {
         Debug.Log("Entered CollisionStay");
 

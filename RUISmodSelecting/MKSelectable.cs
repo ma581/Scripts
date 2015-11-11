@@ -16,7 +16,7 @@ public class MKSelectable : MonoBehaviour {
 
     bool touched = false; //To see if the object was initially touched
 	protected bool rigidbodyWasKinematic;
-	public RUISWandSelector selector { get; protected set; }
+	public MKWandSelector selector { get; protected set; }
 	public bool isSelected { get { return selector != null; } }
 
 	// TODO: return to public when implementation is done
@@ -141,7 +141,7 @@ public class MKSelectable : MonoBehaviour {
         transformHasBeenUpdated = true;
     }
 
-    public virtual void OnSelection(RUISWandSelector selector)
+    public virtual void OnSelection(MKWandSelector selector)
     {
         this.selector = selector;
 
@@ -211,53 +211,42 @@ public class MKSelectable : MonoBehaviour {
         this.selector = null;
     }
 
-    //Manoj ///////////
-    void OnCollisionEnter(Collision col)
-    {
-        if (col.gameObject.tag != "Player") {
-            //Debug.Log(this.name + "Collided with " + col.gameObject.tag);
-            Debug.Log(this.name + " is no longer in contact with Player");
-            //if (highlightMaterial != null) {                 
-            //    //OnSelectionHighlightEnd(); //Removes highlight
-            //}
+    //Manoj     //*************************************************************************************
 
-            if (touched == true)
-            {           OnSelectionHighlightEnd(); //Removes highlight
-                        touched = false;
-            }
+    //void OnCollisionEnter(Collision col)
+    //{
+    //    if (col.gameObject.tag != "Player") {
+    //        Debug.Log(this.name + " is no longer in contact with Player");
+
+    //        if (touched == true){           
+    //            OnSelectionHighlightEnd(); //Removes highlight
+    //            touched = false;
+    //            Debug.Log("Touched is now false");
+    //        }
+    //    }
 
 
-        }
+    //    if (col.gameObject.tag == "Player")
+    //    {
+    //        Debug.Log(this.name + "Collided with " + col.gameObject.tag);
+    //        //GetComponent<Rigidbody>().isKinematic = true; // stop physics
+    //        //transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
 
-        // Doesn't seem to detect RightHand
-        //if (col.gameObject.tag == "RightHand")
-        //{
-        //    Debug.Log(this.name + "Collided with " + col.gameObject.tag);
-        //    //GetComponent<Rigidbody>().isKinematic = true; // stop physics
-        //    //transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
+    //        OnSelectionHighlight(); // Highlights material that is collided
+    //        touched = true;
+    //        Debug.Log("Touched is now true");
 
-        //    OnSelectionHighlight(); // Highlights material that is collided
-        //}
+    //    }
 
-        if (col.gameObject.tag == "Player")
-        {
-            Debug.Log(this.name + "Collided with " + col.gameObject.tag);
-            //GetComponent<Rigidbody>().isKinematic = true; // stop physics
-            //transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
+    //}
 
-            OnSelectionHighlight(); // Highlights material that is collided
-            touched = true;
-        }
+    ////void onCollisionExit(Collision col)
+    ////{
+    ////    Debug.Log("No longer in contact with" + col.gameObject.tag);
 
-    }
-
-    void onCollisionExit(Collision col)
-    {
-        Debug.Log("No longer in contact with" + col.gameObject.tag);
-
-        OnSelectionHighlightEnd(); //Removes highlight
-    }
-    /////////
+    ////    OnSelectionHighlightEnd(); //Removes highlight
+    ////}
+    //*************************************************************************************
 
     public virtual void OnSelectionHighlight()
     {   
@@ -281,16 +270,16 @@ public class MKSelectable : MonoBehaviour {
 
         if (GetComponent<Rigidbody>() && safePhysics)
         {
-			if(selector.positionSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
+			if(selector.positionSelectionGrabType != MKWandSelector.SelectionGrabType.DoNotGrab)
 				GetComponent<Rigidbody>().MovePosition(newManipulationPoint);
-			if(selector.rotationSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
+			if(selector.rotationSelectionGrabType != MKWandSelector.SelectionGrabType.DoNotGrab)
             	GetComponent<Rigidbody>().MoveRotation(newManipulationRotation);
         }
         else
 		{
-			if(selector.positionSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
+			if(selector.positionSelectionGrabType != MKWandSelector.SelectionGrabType.DoNotGrab)
 				transform.position = newManipulationPoint;
-			if(selector.rotationSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
+			if(selector.rotationSelectionGrabType != MKWandSelector.SelectionGrabType.DoNotGrab)
             	transform.rotation = newManipulationRotation;
         }
     }
@@ -308,30 +297,30 @@ public class MKSelectable : MonoBehaviour {
     {
 		switch (selector.positionSelectionGrabType)
 		{
-		case RUISWandSelector.SelectionGrabType.SnapToWand:
+		case MKWandSelector.SelectionGrabType.SnapToWand:
 			return selector.transform.position;
-		case RUISWandSelector.SelectionGrabType.RelativeToWand:
+		case MKWandSelector.SelectionGrabType.RelativeToWand:
 			Vector3 selectorPositionChange = selector.transform.position - selectorPositionAtSelection;
 			return positionAtSelection + selectorPositionChange;
-		case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
+		case MKWandSelector.SelectionGrabType.AlongSelectionRay:
 			float clampDistance = distanceFromSelectionRayOrigin;
 			if (clampToCertainDistance) 
 				clampDistance = distanceToClampTo;
 			Vector3 rayEndPosition = selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
 			// Selected object is now attached to the end of a "pole" that is the selection ray. Lets add a small translation
 			// that affects the rotation pivot and depends on the rotationSelectionGrabType (this is the reason for the below if-clauses)
-			if(selector.rotationSelectionGrabType == RUISWandSelector.SelectionGrabType.SnapToWand)
+			if(selector.rotationSelectionGrabType == MKWandSelector.SelectionGrabType.SnapToWand)
 				return rayEndPosition; // Object center jumps to the end of the ray
 			else
 			{
-				if(selector.rotationSelectionGrabType == RUISWandSelector.SelectionGrabType.RelativeToWand)
+				if(selector.rotationSelectionGrabType == MKWandSelector.SelectionGrabType.RelativeToWand)
 				{	// Below ensures that there is no "jump" in position upon selection, and that the rotation pivot is the ray hit point
 					return rayEndPosition + selector.transform.rotation * Quaternion.Inverse(selectorRotationAtSelection) * rayEndToPositionAtSelection;
 				}
 				else // rotationSelectionGrabType == AlongSelectionRay || rotationSelectionGrabType == DoNotGrab
 					return rayEndPosition + rayEndToPositionAtSelection; // The last term ensures that there is no "jump" in position upon selection
 			}	
-		case RUISWandSelector.SelectionGrabType.DoNotGrab:
+		case MKWandSelector.SelectionGrabType.DoNotGrab:
 			return transform.position;
 		}
 		return transform.position;
@@ -342,14 +331,14 @@ public class MKSelectable : MonoBehaviour {
 	{
 		switch (selector.rotationSelectionGrabType)
 		{
-		case RUISWandSelector.SelectionGrabType.SnapToWand:
+		case MKWandSelector.SelectionGrabType.SnapToWand:
 			return selector.transform.rotation;
-		case RUISWandSelector.SelectionGrabType.RelativeToWand:
+		case MKWandSelector.SelectionGrabType.RelativeToWand:
 			Quaternion selectorRotationChange = Quaternion.Inverse(selectorRotationAtSelection) * rotationAtSelection;
 			return selector.transform.rotation * selectorRotationChange;
-		case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
+		case MKWandSelector.SelectionGrabType.AlongSelectionRay:
 			return Quaternion.LookRotation(selector.selectionRay.direction);
-		case RUISWandSelector.SelectionGrabType.DoNotGrab:
+		case MKWandSelector.SelectionGrabType.DoNotGrab:
 			return transform.rotation;
 		}
 		return transform.rotation;
