@@ -25,8 +25,8 @@ public class StickyCube : MonoBehaviour {
         if (col.gameObject.tag == "Player")
         {
             Debug.Log(this.name + "Collided with " + col.gameObject.tag);
-            //GetComponent<Rigidbody>().isKinematic = true; // stop physics
-            //transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
+            GetComponent<Rigidbody>().isKinematic = true; // stop physics
+            transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
         }
 
         if (col.gameObject.tag == "RightHand")
