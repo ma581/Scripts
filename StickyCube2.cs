@@ -35,7 +35,7 @@ public class StickyCube2 : MonoBehaviour {
         else {
             Debug.Log("Both Hands are not colliding");
             bothHandsColliding = false;
-           // DropObject();
+            DropObject();
             Debug.Log("Dropping object!");
 
         }
@@ -52,16 +52,6 @@ public class StickyCube2 : MonoBehaviour {
             Debug.Log(this.name + "Collided with " + col.gameObject.name);
             rightHandCollision = true;
             rightHand = col.gameObject;
-            //if (bothHandsColliding == true)
-            //{
-            //    Debug.Log("Picking up object!");
-            //    GetComponent<Rigidbody>().isKinematic = true; // stop physics
-            //    transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
-
-            //}
-            
-
-
         }
 
         if (col.gameObject.name == "Bip001 L Forearm")
@@ -138,20 +128,22 @@ public class StickyCube2 : MonoBehaviour {
     void PickUpObject(GameObject hand)
     {
         Debug.Log("Pickup Method!");
-
+        //Debug.Log(gameObject.name);
         GetComponent<Rigidbody>().isKinematic = true; // stop physics
-        transform.parent = hand.transform; // doesn't move yet, but will move w/what it hit
+        //objectOrgParent = gameObject.transform.parent;
+        //Debug.Log(gameObject.name + "Original parent is " + objectOrgParent.name);
 
+        transform.parent = hand.transform; // doesn't move yet, but will move w/what it hit
+       // Debug.Log(gameObject.name + "parent is " + transform.parent.name);
 
     }
 
-    //void DropObject(GameObject ){
-
-    //   Debug.Log("DropObject Method!");
-    //   GetComponent<Rigidbody>().isKinematic = false; // start physics
-
-
-    //}
+    void DropObject()
+    {
+        Debug.Log("DropObject Method!");
+        GetComponent<Rigidbody>().isKinematic = false; // start physics
+        transform.parent = null; //unparent it
+    }
 
     }
 
