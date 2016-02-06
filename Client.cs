@@ -16,13 +16,16 @@ using System.Security.Principal;
 using System.Diagnostics;
 using System.ComponentModel;
 
+
+using System.Linq;
+
 // Edit> Project Settings> Player > Other Settings > API Compatibility Level > Net 2.0
 
 public class Client : MonoBehaviour
 {
     private NamedPipeClientStream PipelineStream = null;
     BinaryReader br= null;
-    byte[] buffer = new byte[60*22];
+    byte[] buffer = new byte[60*4*22];
     string chunk;
 
     //public Text pipeData;
@@ -30,8 +33,8 @@ public class Client : MonoBehaviour
     public bool HandTracking = false;
 
     //Le Matrix
-    public float[][] HandCoordinates;
-    private int[] handCooArray;
+    public float[][] HandCoordinates; //Matrix
+    private double[] handCooArray; //Array
     private string Message;
 
     private void Start()
@@ -93,13 +96,20 @@ public class Client : MonoBehaviour
 
             if (PipelineStream.IsConnected)
             {
+                //Reading bytes
                 PipelineStream.Read(buffer, 0, buffer.Length);
-
                 chunk = Encoding.ASCII.GetString(buffer);
-                handCooArray = Array.ConvertAll(chunk.Split(','), s => int.Parse(s));
-                UnityEngine.Debug.Log(handCooArray[1]);
+                //UnityEngine.Debug.Log("Chunck =" + chunk);
 
-                //UnityEngine.Debug.Log(String.Format("Recieved ({0}) : {1}", counter, chunk));
+                //Cleaning format
+                string cleanChunk = CleanMessage(chunk);
+                UnityEngine.Debug.Log("Clean =" + cleanChunk);
+
+                //Converting to Array
+                handCooArray = cleanChunk.Split(',').Select(n => Convert.ToDouble(n)).ToArray();
+                UnityEngine.Debug.Log("Hand COod =" + handCooArray[1]);
+                UnityEngine.Debug.Log("Size of HandCo=" + handCooArray.Length);
+                
             }
             else
             {
@@ -201,10 +211,42 @@ public class Client : MonoBehaviour
     {
 
     }
-    //public int[] ToIntArray(this string value, char separator)
-    //{
-    //    return Array.ConvertAll(value.Split(separator), s => int.Parse(s));
-    //}
+
+    string CleanMessage(string data)
+    {
+
+        data = data.Substring(2, data.Length - 4);
+        var charsToRemove = new string[] { "[", "]" };
+        foreach (var c in charsToRemove)
+        {
+            data = data.Replace(c, string.Empty);
+        }
+        string cleanedString = System.Text.RegularExpressions.Regex.Replace(data, @"\s+", " ");
+        cleanedString = cleanedString.Replace(' ', ',');
+
+        if (cleanedString[0] == ',')
+        {
+            cleanedString = cleanedString.Substring(1, cleanedString.Length - 1);
+        }
+        char last = cleanedString[cleanedString.Length - 1];
+        if (last == ',')
+        {
+            cleanedString = cleanedString.Substring(0, cleanedString.Length - 1);
+        }
+
+
+        //data = data.Replace(' ', ',');
+        //data = data.Replace('[', string.Empty).Replace(']', ' ').Replace(' ',',');
+
+        //data = data.Replace(",,,,", ',');
+        StringBuilder b = new StringBuilder(data);
+        //b.Replace(",,,,", "").Replace(",,,", ",").Replace(",,", ",");
+        //data = b.ToString();
+        //data = data.Substring(2, data.Length - 2);
+
+        //cleanString = data.Replace('[', ' ').Replace(']', ';');
+        return cleanedString;
+    }
 
 
 }
