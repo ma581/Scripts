@@ -24,9 +24,15 @@ public class Client : MonoBehaviour
     BinaryReader br= null;
     byte[] buffer = new byte[60*22];
     string chunk;
+
     //public Text pipeData;
     int counter = 0;
     public bool HandTracking = false;
+
+    //Le Matrix
+    public float[][] HandCoordinates;
+    private int[] handCooArray;
+    private string Message;
 
     private void Start()
     {
@@ -71,8 +77,16 @@ public class Client : MonoBehaviour
     private void Update()
     {
 
-       // Go to Edit->Project Settings->Player, and tick "Run In Background".
-
+        // Go to Edit->Project Settings->Player, and tick "Run In Background".
+        if (Input.GetKeyUp(KeyCode.Alpha1)) {
+            //UnityEngine.Debug.Log("1 pressed");
+            OnClick1();
+        }
+        if (Input.GetKeyUp(KeyCode.Alpha2))
+        {
+            //UnityEngine.Debug.Log("2 pressed");
+            OnClick2();
+        }
 
         if (HandTracking)
         {
@@ -82,6 +96,8 @@ public class Client : MonoBehaviour
                 PipelineStream.Read(buffer, 0, buffer.Length);
 
                 chunk = Encoding.ASCII.GetString(buffer);
+                handCooArray = Array.ConvertAll(chunk.Split(','), s => int.Parse(s));
+                UnityEngine.Debug.Log(handCooArray[1]);
 
                 //UnityEngine.Debug.Log(String.Format("Recieved ({0}) : {1}", counter, chunk));
             }
@@ -151,6 +167,7 @@ public class Client : MonoBehaviour
             var len = (int)br.ReadUInt32();            // Read string length
             var str = new string(br.ReadChars(len));
             UnityEngine.Debug.Log(String.Format("Read: {0}", str));
+            Message = str;
         }
     }
 
@@ -179,4 +196,15 @@ public class Client : MonoBehaviour
     {
         HandTracking = !HandTracking;
     }
+
+    private void ConvertToMatrix()
+    {
+
+    }
+    //public int[] ToIntArray(this string value, char separator)
+    //{
+    //    return Array.ConvertAll(value.Split(separator), s => int.Parse(s));
+    //}
+
+
 }
