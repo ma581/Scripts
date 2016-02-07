@@ -25,7 +25,7 @@ public class Client : MonoBehaviour
 {
     private NamedPipeClientStream PipelineStream = null;
     BinaryReader br= null;
-    byte[] buffer = new byte[60*4*22];
+    byte[] buffer = new byte[100*4*22];
     string chunk;
 
     //public Text pipeData;
@@ -34,7 +34,7 @@ public class Client : MonoBehaviour
 
     //Le Matrix
     public float[][] HandCoordinates; //Matrix
-    private double[] handCooArray; //Array
+    public double[] handCooArray; //Array
     private string Message;
 
     private void Start()
@@ -103,12 +103,12 @@ public class Client : MonoBehaviour
 
                 //Cleaning format
                 string cleanChunk = CleanMessage(chunk);
-                UnityEngine.Debug.Log("Clean =" + cleanChunk);
+               // UnityEngine.Debug.Log("Clean =" + cleanChunk);
 
                 //Converting to Array
                 handCooArray = cleanChunk.Split(',').Select(n => Convert.ToDouble(n)).ToArray();
-                UnityEngine.Debug.Log("Hand COod =" + handCooArray[1]);
-                UnityEngine.Debug.Log("Size of HandCo=" + handCooArray.Length);
+           //     UnityEngine.Debug.Log("Hand COod =" + handCooArray[1]);
+                //UnityEngine.Debug.Log("Size of HandCo=" + handCooArray.Length);
                 
             }
             else
@@ -229,10 +229,10 @@ public class Client : MonoBehaviour
             cleanedString = cleanedString.Substring(1, cleanedString.Length - 1);
         }
         char last = cleanedString[cleanedString.Length - 1];
-        if (last == ',')
-        {
+       // if (last == ',')
+        //{
             cleanedString = cleanedString.Substring(0, cleanedString.Length - 1);
-        }
+        //}
 
 
         //data = data.Replace(' ', ',');
@@ -246,6 +246,11 @@ public class Client : MonoBehaviour
 
         //cleanString = data.Replace('[', ' ').Replace(']', ';');
         return cleanedString;
+    }
+
+    public double[] outputArray()
+    {
+        return handCooArray;
     }
 
 

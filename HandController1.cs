@@ -5,6 +5,9 @@ public class HandController1 : MonoBehaviour
 {
     public GameObject rightHand; //Do  nothing 
     private FingerManager handFingers; // Need to attach the gameObject with the FingerManager script component 
+    public GameObject Pipe;
+    private Client client; 
+
     //public Matrix4x4 A = new Matrix4x4();
 
     //    % matrix_A =
@@ -18,6 +21,7 @@ public class HandController1 : MonoBehaviour
     void Start()
 {
         handFingers = rightHand.GetComponent<FingerManager>();
+        client = Pipe.GetComponent<Client>();
     }
 
     // Update is called once per frame
@@ -28,6 +32,11 @@ public class HandController1 : MonoBehaviour
         {
             handFingers.finger[i][0].transform.Rotate(Vector3.up * Time.deltaTime * 10f);
         }
+        //if (client.HandTracking)
+        //{
+        //    Debug.Log("HandCOArray = " + client.handCooArray[1]);
+        //    Debug.Log(client.handCooArray.Length);
+        //}
     }
 
     //Vector3 transformVector(Vector3 fingerPos)
