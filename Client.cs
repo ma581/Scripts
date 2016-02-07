@@ -34,7 +34,8 @@ public class Client : MonoBehaviour
 
     //Le Matrix
     public float[][] HandCoordinates; //Matrix
-    public double[] handCooArray; //Array
+    public float[] handCooArray; //Array
+    //public float[] handCooFloat;
     private string Message;
 
     private void Start()
@@ -90,7 +91,7 @@ public class Client : MonoBehaviour
             //UnityEngine.Debug.Log("2 pressed");
             OnClick2();
         }
-
+        
         if (HandTracking)
         {
 
@@ -106,7 +107,11 @@ public class Client : MonoBehaviour
                // UnityEngine.Debug.Log("Clean =" + cleanChunk);
 
                 //Converting to Array
-                handCooArray = cleanChunk.Split(',').Select(n => Convert.ToDouble(n)).ToArray();
+                handCooArray = cleanChunk.Split(',').Select(n => Convert.ToSingle(n)).ToArray();
+                //for(int i=0; i<handCooArray.Length; i++)
+                //{
+                //    handCooFloat[i] = (float)handCooArray[i];
+                //}
            //     UnityEngine.Debug.Log("Hand COod =" + handCooArray[1]);
                 //UnityEngine.Debug.Log("Size of HandCo=" + handCooArray.Length);
                 
@@ -248,10 +253,10 @@ public class Client : MonoBehaviour
         return cleanedString;
     }
 
-    public double[] outputArray()
-    {
-        return handCooArray;
-    }
+    //public double[] outputArray()
+    //{
+    //    return handCooArray;
+    //}
 
 
 }
