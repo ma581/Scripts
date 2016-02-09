@@ -113,6 +113,7 @@ public class HandController1 : MonoBehaviour
         baseDirection.z = new Vector3(client.handCooArray[42], client.handCooArray[43], client.handCooArray[44]) - new Vector3(client.handCooArray[30], client.handCooArray[31], client.handCooArray[32]);
         baseDirection.y = new Vector3(client.handCooArray[0], client.handCooArray[1], client.handCooArray[2]) - new Vector3(client.handCooArray[3], client.handCooArray[4], client.handCooArray[5]);
         baseDirection.x = -1*Vector3.Cross(baseDirection.z, baseDirection.y).normalized;
+        
         //thumb.tipDirection = handFingers.finger[0][1].transform.position - handFingers.finger[0][0].transform.position;
         //Debug.Log("Thumb tip direction = " + thumb.tipDirection);
         //thumb.midDirection = handFingers.finger[0][0].transform.position - rightHand.transform.GetChild(0).position;
@@ -138,19 +139,15 @@ public class HandController1 : MonoBehaviour
     void updateDirections()
     {
 
-        //Vector3 TargetLocation = Person2.transform.position - this.transform.position;
 
-        //Quaternion TargetRotation = Quaternion.FromToRotation(transform.forward, TargetLocation);
-
-        //this.transform.rotation = TargetRotation;
 
         //Base
         if (Input.GetKeyUp(KeyCode.Alpha3))
         {
             //rightHand.transform.rotation = rightHand.transform.rotation* Quaternion.FromToRotation(rightHand.transform.forward, -1*baseDirection.z);
-            rightHand.transform.right = -1*baseDirection.y;
-            
-            
+            //rightHand.transform.right = -1*baseDirection.y;
+
+            rightHand.transform.rotation = Quaternion.FromToRotation(rightHand.transform.forward, -1 * baseDirection.y);
         }
 
         if (Input.GetKey(KeyCode.Alpha4))
@@ -159,7 +156,6 @@ public class HandController1 : MonoBehaviour
             //rightHand.transform.rotation = Quaternion.FromToRotation()
             //rightHand.transform.LookAt(baseDirection);
 
-            //rightHand.transform.rotation = Quaternion.FromToRotation(rightHand.transform.forward, baseDirection.z);
 
 
         }
