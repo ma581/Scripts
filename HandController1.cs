@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class HandController1 : MonoBehaviour
 {
     public GameObject rightHand; //Do  nothing 
@@ -9,23 +10,26 @@ public class HandController1 : MonoBehaviour
     public GameObject Pipe;
     private Client client;
 
-    public GameObject mid, root, thumbs, indexs, pinkys, rings, middles; 
+    public GameObject mid, root, thumbs, indexs, pinkys, rings, middles; //To control cubes to finger poses
 
     private struct fingDirection
     {
-        public Vector3 tipDirection;
-        public Vector3 midDirection;
-        public Vector3 basDirection;
+        public Directions tipDirection;
+        public Directions midDirection;
+        public Directions basDirection;
     }
     fingDirection thumb, index, middle, ring, pinky; //to store relative directions of fingers
-
+    fingDirection thumbOld, indexOld, middleOld, ringOld, pinkyOld;
     private struct Directions
-    {
-        public Vector3 x;
-        public Vector3 y;
-        public Vector3 z;
+    {       
+        public Vector3 up;
+        public Vector3 forward;
+        public Vector3 right;
     }
-    Directions baseDirection;
+    Directions baseDirection, baseOldDirecion;
+
+    public bool updatefinger;
+    
     //    % matrix_A =
     //% 
     //%     0.0013   -0.0009   -0.0000  270.4534
@@ -33,6 +37,7 @@ public class HandController1 : MonoBehaviour
     //%    -0.0023   -0.0030    0.0000  285.0540
     //%     0         0         0       1
     // Transformation matrix
+
     
     void Start()
 {
@@ -44,6 +49,12 @@ public class HandController1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Directions
+        calculateOldDirections();
+        calculateNewDirections();
+
+        //Update direction
+        updateDirections();
 
         if (client.HandTracking)
         {
@@ -53,31 +64,33 @@ public class HandController1 : MonoBehaviour
             updateTipPos();
            
             //Directions
-            calculateDirections();
+            calculateOldDirections();
+            calculateNewDirections();
 
             //Update direction
             updateDirections();
         }
 
-        //for (int i = 0; i < 5; i++)
-        //{
-        //    handFingers.finger[i][0].transform.Rotate(Vector3.up * Time.deltaTime * 10f);
-        //}
+       
 
       
     }
 
     void updateBasePos()
     {
-        //Base
-        rightHand.transform.position = new Vector3(client.handCooArray[0], client.handCooArray[1], client.handCooArray[2]); //Hand centre 
+        //HAND BASE
+        //rightHand.transform.position = new Vector3(client.handCooArray[0], client.handCooArray[1], client.handCooArray[2]); //Hand centre 
+        rightHand.transform.position = new Vector3(275.3907f, 1.1321f, 275.5441f);
 
+        //FINGER BASES
         //rightHand.transform.GetChild(0).position = new Vector3(client.handCooArray[57], client.handCooArray[58], client.handCooArray[59]); //Thumb base 
         //rightHand.transform.GetChild(1).position = new Vector3(client.handCooArray[6], client.handCooArray[7], client.handCooArray[8]); //Pinky base
         //rightHand.transform.GetChild(2).position = new Vector3(client.handCooArray[18], client.handCooArray[19], client.handCooArray[20]); //Ring base
         //rightHand.transform.GetChild(3).position = new Vector3(client.handCooArray[30], client.handCooArray[31], client.handCooArray[32]); //Middle base
         //rightHand.transform.GetChild(4).position = new Vector3(client.handCooArray[42], client.handCooArray[43], client.handCooArray[44]); //Index base
 
+
+        //FINGER CUBES
         //root.transform.position = new Vector3(client.handCooArray[3], client.handCooArray[4], client.handCooArray[5]); //Hand centre 
         //mid.transform.position = new Vector3(client.handCooArray[0], client.handCooArray[1], client.handCooArray[2]); //Hand centre 
         //thumbs.transform.position = new Vector3(client.handCooArray[63], client.handCooArray[64], client.handCooArray[65]); //Hand centre 
@@ -107,33 +120,88 @@ public class HandController1 : MonoBehaviour
         handFingers.finger[1][1].transform.position = new Vector3(client.handCooArray[51], client.handCooArray[52], client.handCooArray[53]); //Index tip
     }
 
-    void calculateDirections()
+    void calculateOldDirections()
+
     {
-        //baseDirection = (new Vector3(client.handCooArray[0], client.handCooArray[1], client.handCooArray[2]) - new Vector3(client.handCooArray[3], client.handCooArray[4], client.handCooArray[5]))- rightHand.transform.forward;
-        baseDirection.z = new Vector3(client.handCooArray[42], client.handCooArray[43], client.handCooArray[44]) - new Vector3(client.handCooArray[30], client.handCooArray[31], client.handCooArray[32]);
-        baseDirection.y = new Vector3(client.handCooArray[0], client.handCooArray[1], client.handCooArray[2]) - new Vector3(client.handCooArray[3], client.handCooArray[4], client.handCooArray[5]);
-        baseDirection.x = -1*Vector3.Cross(baseDirection.z, baseDirection.y).normalized;
-        
-        //thumb.tipDirection = handFingers.finger[0][1].transform.position - handFingers.finger[0][0].transform.position;
-        //Debug.Log("Thumb tip direction = " + thumb.tipDirection);
-        //thumb.midDirection = handFingers.finger[0][0].transform.position - rightHand.transform.GetChild(0).position;
-        //thumb.basDirection = thumb.midDirection;
 
-        //index.tipDirection = handFingers.finger[1][1].transform.position - handFingers.finger[1][0].transform.position;
-        //index.midDirection = handFingers.finger[1][0].transform.position - rightHand.transform.GetChild(1).position;
-        //index.basDirection = index.midDirection;
+        //BASE
+        baseOldDirecion.forward = rightHand.transform.forward;
+        Debug.Log("baseOld.forward = " + baseOldDirecion.forward.ToString("F4"));
+        baseOldDirecion.right = rightHand.transform.right;
+        Debug.Log("baseOld.right = " + baseOldDirecion.right.ToString("F4"));
+        Debug.Log("baseOld.up = " + rightHand.transform.up.ToString("F4"));
+        ////THUMB
+        //thumbOld.tipDirection.forward = handFingers.finger[0][1].transform.forward;
+        //thumbOld.tipDirection.right = handFingers.finger[0][1].transform.right;
+        //thumbOld.midDirection.forward = handFingers.finger[0][0].transform.forward;
+        //thumbOld.midDirection.right = handFingers.finger[0][0].transform.right;
+        //thumbOld.basDirection.forward = rightHand.transform.GetChild(0).transform.forward;
+        //thumbOld.basDirection.right = rightHand.transform.GetChild(0).transform.right;
 
-        //middle.tipDirection = handFingers.finger[2][1].transform.position - handFingers.finger[2][0].transform.position;
-        //middle.midDirection = handFingers.finger[2][0].transform.position - rightHand.transform.GetChild(2).position;
-        //middle.basDirection = middle.midDirection;
+        ////INDEX
+        //indexOld.tipDirection.forward = handFingers.finger[1][1].transform.forward;
+        //indexOld.tipDirection.right = handFingers.finger[1][1].transform.right;
+        //indexOld.midDirection.forward = handFingers.finger[1][0].transform.forward;
+        //indexOld.midDirection.right = handFingers.finger[1][0].transform.right;
+        //indexOld.basDirection.forward = rightHand.transform.GetChild(1).transform.forward;
+        //indexOld.basDirection.right = rightHand.transform.GetChild(1).transform.right;
 
-        //ring.tipDirection = handFingers.finger[3][1].transform.position - handFingers.finger[3][0].transform.position;
-        //ring.midDirection = handFingers.finger[3][0].transform.position - rightHand.transform.GetChild(3).position;
-        //ring.basDirection = ring.midDirection;
+        ////MIDDLE
+        //middleOld.tipDirection.forward = handFingers.finger[2][1].transform.forward;
+        //middleOld.tipDirection.right = handFingers.finger[2][1].transform.right;
+        //middleOld.midDirection.forward = handFingers.finger[2][0].transform.forward;
+        //middleOld.midDirection.right = handFingers.finger[2][0].transform.right;
+        //middleOld.basDirection.forward = rightHand.transform.GetChild(2).transform.forward;
+        //middleOld.basDirection.right = rightHand.transform.GetChild(2).transform.right;
 
-        //pinky.tipDirection = handFingers.finger[4][1].transform.position - handFingers.finger[4][0].transform.position;
-        //pinky.midDirection = handFingers.finger[4][0].transform.position - rightHand.transform.GetChild(4).position;
-        //pinky.basDirection = pinky.midDirection;
+        ////RING
+        //ringOld.tipDirection.forward = handFingers.finger[3][1].transform.forward;
+        //ringOld.tipDirection.right = handFingers.finger[3][1].transform.right;
+        //ringOld.midDirection.forward = handFingers.finger[3][0].transform.forward;
+        //ringOld.midDirection.right = handFingers.finger[3][0].transform.right;
+        //ringOld.basDirection.forward = rightHand.transform.GetChild(3).transform.forward;
+        //ringOld.basDirection.right = rightHand.transform.GetChild(3).transform.right;
+
+        ////PINKY
+        //pinkyOld.tipDirection.forward = handFingers.finger[4][1].transform.forward;
+        //pinkyOld.tipDirection.right = handFingers.finger[4][1].transform.right;
+        //pinkyOld.midDirection.forward = handFingers.finger[4][0].transform.forward;
+        //pinkyOld.midDirection.right = handFingers.finger[4][0].transform.right;
+        //pinkyOld.basDirection.forward = rightHand.transform.GetChild(4).transform.forward;
+        //pinkyOld.basDirection.right = rightHand.transform.GetChild(4).transform.right;
+
+    }
+
+    void calculateNewDirections()
+    {
+        //BASE
+        //baseDirection.forward = new Vector3(client.handCooArray[42], client.handCooArray[43], client.handCooArray[44]) - new Vector3(client.handCooArray[30], client.handCooArray[31], client.handCooArray[32]);
+        //baseDirection.up = new Vector3(client.handCooArray[0], client.handCooArray[1], client.handCooArray[2]) - new Vector3(client.handCooArray[3], client.handCooArray[4], client.handCooArray[5]);
+        baseDirection.forward = new Vector3(1.1113f, 1.1220f, 275.5441f) - new Vector3(1.1878f, 1.2036f, 1.1405f);
+        Debug.Log("base.forward = " + baseDirection.forward.ToString("F4"));
+        baseDirection.right = new Vector3(275.3907f, 275.3908f, 275.4292f) - new Vector3(275.4331f, 275.4365f, 275.4349f);
+        Debug.Log("base.right = " + baseDirection.right.ToString("F4"));
+        baseDirection.up =  Vector3.Cross(baseDirection.forward, baseDirection.right).normalized;
+        Debug.Log("base.up = " + baseDirection.up.ToString("F4"));
+        ////THUMB
+        //thumb.tipDirection.right = baseDirection.right;
+        //thumb.tipDirection.forward = new Vector3(client.handCooArray[63], client.handCooArray[64], client.handCooArray[65]) - new Vector3(client.handCooArray[60], client.handCooArray[61], client.handCooArray[62]);
+        //thumb.midDirection.right = baseDirection.right;
+        //thumb.midDirection.forward = new Vector3(client.handCooArray[60], client.handCooArray[61], client.handCooArray[62]) - new Vector3(client.handCooArray[57], client.handCooArray[58], client.handCooArray[59]);
+        //thumb.basDirection.right = baseDirection.right;
+        //thumb.basDirection.forward = new Vector3(client.handCooArray[57], client.handCooArray[58], client.handCooArray[59]) - new Vector3(client.handCooArray[54], client.handCooArray[55], client.handCooArray[56]);
+
+
+
+    }
+
+    void calculateTransDirections()
+    {
+        //        % M =
+        //%
+        //% -3.4999 - 3.7718 - 0.0055
+        //% 10.3147   11.1472    0.0050
+        //% 0.9948 - 0.3978    0.0002
     }
 
     void updateDirections()
@@ -147,12 +215,13 @@ public class HandController1 : MonoBehaviour
             //rightHand.transform.rotation = rightHand.transform.rotation* Quaternion.FromToRotation(rightHand.transform.forward, -1*baseDirection.z);
             //rightHand.transform.right = -1*baseDirection.y;
 
-            rightHand.transform.rotation = Quaternion.FromToRotation(rightHand.transform.forward, -1 * baseDirection.y);
+            //rightHand.transform.rotation = Quaternion.FromToRotation(rightHand.transform.forward, -1 * baseDirection.y);
+            rightHand.transform.rotation = rightHand.transform.rotation* Quaternion.LookRotation(-1*baseDirection.right, baseDirection.forward);
         }
 
         if (Input.GetKey(KeyCode.Alpha4))
         {
-            rightHand.transform.forward =  baseDirection.z;
+            //rightHand.transform.forward =  baseDirection.z;
             //rightHand.transform.rotation = Quaternion.FromToRotation()
             //rightHand.transform.LookAt(baseDirection);
 
@@ -162,7 +231,7 @@ public class HandController1 : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Alpha5))
         {
-            rightHand.transform.up = baseDirection.x;
+            //rightHand.transform.up = baseDirection.x;
         }
         //rightHand.transform.rotation = Quaternion.LookRotation(Vector3.up);
 
