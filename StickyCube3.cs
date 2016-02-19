@@ -9,8 +9,12 @@ public class StickyCube3 : MonoBehaviour
     bool RTouchAndClosed = false;
     bool LTouchAndClosed = false;
 
-    GameObject rightHand;
-    GameObject leftHand;
+    bool Lholding = false;
+    bool Rholding = false;
+
+    //GameObject rightHand;
+    //GameObject leftHand;
+    GameObject hand;
     GameObject objectOrgParent;
 
 
@@ -25,24 +29,48 @@ public class StickyCube3 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(string.Format("R Collision: {0}", rightHandCollision));
+        //Debug.Log(string.Format("R CLosed: {0}", RUISSkeletonController.rightHandClosed));
 
         if (rightHandCollision == true && RUISSkeletonController.rightHandClosed == true)
         {
-            Debug.Log("Both Hands are colliding");
+            Debug.Log("RColliding + Closed");
             RTouchAndClosed = true;
-            PickUpObject(rightHand);
-            Debug.Log("Picking up object!");
+            PickUpObject(hand);
+            Debug.Log("RPicking up object!");
 
 
         }
         else {
-            Debug.Log("Both Hands are not colliding");
             RTouchAndClosed = false;
-            DropObject();
-            Debug.Log("Dropping object!");
+            if (Rholding)
+            {
+                DropObject();
+            }
+            
+            //Debug.Log("RDropping object!");
 
         }
 
+        //if (leftHandCollision == true && RUISSkeletonController.leftHandClosed == true)
+        //{
+        //    Debug.Log("LColliding + Closed");
+        //    LTouchAndClosed = true;
+        //    PickUpObject(hand);
+        //    Debug.Log("LPicking up object!");
+
+
+        //}
+        //else {
+        //    LTouchAndClosed = false;
+        //    DropObject();
+        //    //.Log("LDropping object!");
+        //    if (Lholding)
+        //    {
+        //        DropObject();
+        //    }
+
+        //}
 
 
     }
@@ -54,7 +82,7 @@ public class StickyCube3 : MonoBehaviour
         {
             Debug.Log(this.name + "Collided with " + col.gameObject.name);
             rightHandCollision = true;
-            rightHand = col.gameObject;
+            hand = col.gameObject;
         }
 
         if (col.gameObject.name == "Bip001 L Hand")
@@ -64,7 +92,7 @@ public class StickyCube3 : MonoBehaviour
             //transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
 
             leftHandCollision = true;
-            leftHand = col.gameObject;
+            hand = col.gameObject;
         }
     }
 
@@ -73,7 +101,7 @@ public class StickyCube3 : MonoBehaviour
 
         if (col.gameObject.name == "Bip001 R Hand")
         {
-            Debug.Log(this.name + " Stopped Collided with " + col.gameObject.name);
+            //Debug.Log(this.name + " Stopped Collided with " + col.gameObject.name);
             rightHandCollision = false;
             
 
@@ -82,7 +110,7 @@ public class StickyCube3 : MonoBehaviour
 
         if (col.gameObject.name == "Bip001 L Hand")
         {
-            Debug.Log(this.name + "Stopped Collided with " + col.gameObject.name);
+            //Debug.Log(this.name + "Stopped Collided with " + col.gameObject.name);
 
             leftHandCollision = false;
 
@@ -103,7 +131,14 @@ public class StickyCube3 : MonoBehaviour
 
         transform.parent = hand.transform; // doesn't move yet, but will move w/what it hit
                                            // Debug.Log(gameObject.name + "parent is " + transform.parent.name);
-
+        if(hand.name == "Bip001 L Hand")
+        {
+            Lholding = true;
+        }
+        else if(hand.name == "Bip001 R Hand")
+        {
+            Rholding = true;
+        }
     }
 
     void DropObject()
