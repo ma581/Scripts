@@ -7,35 +7,44 @@ public class hammerHandle : MonoBehaviour {
     bool rightHandCollision = false;
     bool collideAndFist = false;
     bool fist = false;
-
+    bool readyToPickUP = false;
     // Use this for initialization
     void Start () {
 	
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
+    // Update is called once per frame
+    void Update()
+    {
 
-        if (rightHandCollision == true)
+        if (Input.GetKey(KeyCode.Alpha3))
         {
-            Debug.Log("Colliding and fist closed");
-            collideAndFist = true;
-            PickUpObject(rightForearm);
-            Debug.Log("Picking up object!");
-
-
-        }
-        else
-        {
-            Debug.Log("Both Hands are not colliding");
-            collideAndFist = false;
-            //DropObject();
-            Debug.Log("Dropping object!");
-
+            readyToPickUP = true;
         }
 
+        if (readyToPickUP)
+        {
+            if (rightHandCollision == true)
+            {
+                Debug.Log("Colliding and fist closed");
+                collideAndFist = true;
+                PickUpObject(rightForearm);
+                Debug.Log("Picking up object!");
+
+
+            }
+            else
+            {
+                Debug.Log("Both Hands are not colliding");
+                collideAndFist = false;
+                //DropObject();
+                Debug.Log("Dropping object!");
+
+            }
+        }
     }
+
+    
 
     void OnTriggerEnter(Collider col)
     {
