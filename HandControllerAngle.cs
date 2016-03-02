@@ -59,10 +59,10 @@ public class HandControllerAngle : MonoBehaviour
 
         //BASE
         baseOldDirecion.forward = rightHand.transform.forward;
-        Debug.Log("baseOld.forward = " + baseOldDirecion.forward.ToString("F4"));
+        //Debug.Log("baseOld.forward = " + baseOldDirecion.forward.ToString("F4"));
         baseOldDirecion.right = rightHand.transform.right;
-        Debug.Log("baseOld.right = " + baseOldDirecion.right.ToString("F4"));
-        Debug.Log("baseOld.up = " + rightHand.transform.up.ToString("F4"));
+        //Debug.Log("baseOld.right = " + baseOldDirecion.right.ToString("F4"));
+        //Debug.Log("baseOld.up = " + rightHand.transform.up.ToString("F4"));
         ////THUMB
         //thumbOld.tipDirection.forward = handFingers.finger[0][1].transform.forward;
         //thumbOld.tipDirection.right = handFingers.finger[0][1].transform.right;

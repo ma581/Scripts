@@ -85,12 +85,13 @@ public class Client : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Alpha1)) {
             //UnityEngine.Debug.Log("1 pressed");
             OnClick1();
-        }
-        if (Input.GetKeyUp(KeyCode.Alpha2))
-        {
-            //UnityEngine.Debug.Log("2 pressed");
             OnClick2();
         }
+        //if (Input.GetKeyUp(KeyCode.Alpha2))
+        //{
+        //    //UnityEngine.Debug.Log("2 pressed");
+        //    OnClick2();
+        //}
         
         if (HandTracking)
         {
