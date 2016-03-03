@@ -3,13 +3,15 @@ using System.Collections;
 
 public class SpadeCement : MonoBehaviour {
 
-    private TrailRenderer trailRenderer;
-    
+    //private TrailRenderer trailRenderer;
+    public Material Brick;
+    public Material Cement;
+
 	// Use this for initialization
 	void Start () {
 
-        trailRenderer = gameObject.GetComponent<TrailRenderer>();
-        trailRenderer.enabled = false;
+
+        //gameObject.GetComponent<TrailRenderer>().enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -19,14 +21,23 @@ public class SpadeCement : MonoBehaviour {
 
     void OnCollisionEnter(Collision col)
     {
-        if(gameObject.tag == "Brick")
+
+
+        if (col.gameObject.tag == "Cement")
         {
-            trailRenderer.enabled = true;
+            //Debug.Log("BRICKS");
+            //gameObject.GetComponent<TrailRenderer>().enabled = true;
+            col.gameObject.GetComponent<Renderer>().material = Cement;
         }
     }
 
     void OnCollisionExit(Collision col)
     {
-        trailRenderer.enabled = false;
+        //gameObject.GetComponent<TrailRenderer>().enabled = false;
+        //col.gameObject.GetComponent<ParticleSystem>().enableEmission = false;
+
+        //col.gameObject.GetComponent<Renderer>().material = Brick;
+
+
     }
 }

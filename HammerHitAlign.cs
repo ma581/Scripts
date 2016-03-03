@@ -5,7 +5,7 @@ public class HammerHitAlign : MonoBehaviour
 {
     GameObject hammer;
     bool hammerHitBrick = false;
-
+    public Material originalMaterial;
     // Use this for initialization
     void Start()
     {
@@ -36,7 +36,7 @@ public class HammerHitAlign : MonoBehaviour
         {
             //Debug.Log(col.gameObject.name);
             hammerHitBrick = true;
-            gameObject.GetComponent<Renderer>().material.color = Color.cyan;
+            gameObject.GetComponent<Renderer>().material.color = Color.red;
             hammer = col.gameObject;
         }
     }
@@ -46,7 +46,7 @@ public class HammerHitAlign : MonoBehaviour
         if (col.gameObject.name == "Hammer")
         {
             hammerHitBrick = false;
-            gameObject.GetComponent<Renderer>().material.color = Color.white;
+            gameObject.GetComponent<Renderer>().material = originalMaterial;
             hammer = col.gameObject;
         }
     }

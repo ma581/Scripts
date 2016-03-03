@@ -52,6 +52,7 @@ public class brickPickUp : MonoBehaviour
                 DropObject();
                 rightFinger1COllision = false;
                 rightHandCollision = false;
+                //gameObject.GetComponent<Renderer>().material.color = Color.white;
             }
             
             //Debug.Log("RDropping object!");
@@ -134,7 +135,8 @@ public class brickPickUp : MonoBehaviour
         gameObject.GetComponent<Renderer>().material.color = Color.red;
         //Debug.Log("Pickup Method!");
         //Debug.Log(gameObject.name);
-        GetComponent<Rigidbody>().isKinematic = true; // stop physics
+
+        //GetComponent<Rigidbody>().isKinematic = true; // stop physics
 
         transform.parent = hand.transform; // doesn't move yet, but will move w/what it hit
                                            // Debug.Log(gameObject.name + "parent is " + transform.parent.name);
@@ -151,7 +153,7 @@ public class brickPickUp : MonoBehaviour
 
     void DropObject()
     {
-        gameObject.GetComponent<Renderer>().material.color = Color.green;
+        //gameObject.GetComponent<Renderer>().material.color = Color.green;
         //Debug.Log("DropObject Method!");
         GetComponent<Rigidbody>().isKinematic = false; // start physics
         transform.parent = null; //unparent it

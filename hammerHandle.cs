@@ -27,19 +27,19 @@ public class hammerHandle : MonoBehaviour {
         {
             if (rightHandCollision == true)
             {
-                Debug.Log("Colliding and fist closed");
+                //Debug.Log("Colliding and fist closed");
                 collideAndFist = true;
                 PickUpObject(rightForearm);
-                Debug.Log("Picking up object!");
+                //Debug.Log("Picking up object!");
 
 
             }
             else
             {
-                Debug.Log("Both Hands are not colliding");
+                //Debug.Log("Both Hands are not colliding");
                 collideAndFist = false;
                 //DropObject();
-                Debug.Log("Dropping object!");
+                //Debug.Log("Dropping object!");
 
             }
         }
@@ -52,7 +52,7 @@ public class hammerHandle : MonoBehaviour {
         //Debug.Log(this.name + "Collided with " + col.gameObject.name);
         if (col.gameObject.name == "Bip001 R Hand")
         {
-            Debug.Log(this.name + "Collided with " + col.gameObject.name);
+            //Debug.Log(this.name + "Collided with " + col.gameObject.name);
             rightHandCollision = true;
             rightHand = col.gameObject;
         }
@@ -73,7 +73,7 @@ public class hammerHandle : MonoBehaviour {
 
         if (col.gameObject.name == "Bip001 R Hand")
         {
-            Debug.Log(this.name + " Stopped Collided with " + col.gameObject.name);
+            //Debug.Log(this.name + " Stopped Collided with " + col.gameObject.name);
             rightHandCollision = false;
             //GetComponent<Rigidbody>().isKinematic = true; // stop physics
             //transform.parent = col.transform; // doesn't move yet, but will move w/what it hit
@@ -101,9 +101,9 @@ public class hammerHandle : MonoBehaviour {
 
     void PickUpObject(GameObject hand)
     {
-        Debug.Log("Pickup Method!");
+        //Debug.Log("Pickup Method!");
         //Debug.Log(gameObject.name);
-        GetComponent<Rigidbody>().isKinematic = true; // stop physics
+        //GetComponent<Rigidbody>().isKinematic = true; // stop physics
         //objectOrgParent = gameObject.transform.parent;
         //Debug.Log(gameObject.name + "Original parent is " + objectOrgParent.name);
 
@@ -114,7 +114,7 @@ public class hammerHandle : MonoBehaviour {
 
     void DropObject()
     {
-        Debug.Log("DropObject Method!");
+        //Debug.Log("DropObject Method!");
         GetComponent<Rigidbody>().isKinematic = false; // start physics
         transform.parent = null; //unparent it
     }
