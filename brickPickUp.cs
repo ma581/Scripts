@@ -50,10 +50,19 @@ public class brickPickUp : MonoBehaviour
             if (Rholding)
             {
                 DropObject();
+                rightFinger1COllision = false;
+                rightHandCollision = false;
             }
             
             //Debug.Log("RDropping object!");
 
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            //DropObject();
+            rightFinger1COllision = false;
+            rightHandCollision = false;
         }
     }
 

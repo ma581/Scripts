@@ -17,10 +17,11 @@ public class hammerHandle : MonoBehaviour {
     void Update()
     {
 
-        if (Input.GetKey(KeyCode.Alpha3))
-        {
-            readyToPickUP = true;
-        }
+        //if (Input.GetKey(KeyCode.Alpha3))
+        //{
+        //    readyToPickUP = true;
+        //}
+        readyToPickUP = true;
 
         if (readyToPickUP)
         {
