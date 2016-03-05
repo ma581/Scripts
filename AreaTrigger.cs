@@ -4,7 +4,11 @@ using System.Collections;
 public class AreaTrigger : MonoBehaviour {
 
     public bool HandInRegion = false;
-    private bool toggle = false;
+
+    bool fingerCollision = false;
+    bool handCollision = false;
+    bool bothColliding = false;
+    bool updated = false;
 	// Use this for initialization
 	void Start () {
 	
@@ -12,6 +16,22 @@ public class AreaTrigger : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        if(handCollision && fingerCollision)
+        {
+            bothColliding = true;
+        }
+        else
+        {
+            bothColliding = false;
+            updated = false;
+        }
+        if (bothColliding && !updated)
+        {
+            HandInRegion = !HandInRegion;
+            updated = true;
+        }
+        
 	
 	}
 
@@ -19,10 +39,34 @@ public class AreaTrigger : MonoBehaviour {
     {
         if (col.gameObject.name == "Bip001 R Hand")
         {
-            HandInRegion = !HandInRegion;
-            Debug.Log("HAND IN HAMMER REGION");
+            //HandInRegion = !HandInRegion;
+            //Debug.Log("HandInRegion = "+ HandInRegion);
+            handCollision = true;
+            Debug.Log("handCOllision = " + handCollision);
+        }
+        if(col.gameObject.name == "Bip001 R Finger12")
+        {
+            fingerCollision = true;
+            Debug.Log("fingerCOllision = " + fingerCollision);
         }
     }
 
-    
+
+    void OnTriggerExit(Collider col)
+    {
+        if (col.gameObject.name == "Bip001 R Hand")
+        {
+            //HandInRegion = !HandInRegion;
+            //Debug.Log("HandInRegion = "+ HandInRegion);
+            handCollision = false;
+            Debug.Log("handCOllision = " + handCollision);
+        }
+        if (col.gameObject.name == "Bip001 R Finger12")
+        {
+            fingerCollision = false;
+            Debug.Log("fingerCOllision = " + fingerCollision);
+        }
+    }
+
+
 }

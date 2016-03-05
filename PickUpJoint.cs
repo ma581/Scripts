@@ -9,11 +9,10 @@ public class PickUpJoint : MonoBehaviour
     public GameObject HammerRegion; //Do  nothing 
     private AreaTrigger hammerAreaTrig;
 
-    bool rightHandCollision = false; //Hand
-    bool rightFinger1COllision = false; //Finger
-    bool RTouchAndClosed = false;     //Touching and closed
-    bool Rholding = false;    //Holding
+
     bool f = false;
+
+
     public GameObject heldHammer;
     public GameObject tableHammer;
 
@@ -32,12 +31,12 @@ public class PickUpJoint : MonoBehaviour
             tableHammer.SetActive(!f);
         }
 
-        if (hammerAreaTrig.HandInRegion)
-        {
-            //f = !f;
+        
             heldHammer.SetActive(hammerAreaTrig.HandInRegion);
             tableHammer.SetActive(!hammerAreaTrig.HandInRegion);
-        }
+       
+
+        
 
     }
 
