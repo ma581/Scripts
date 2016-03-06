@@ -20,17 +20,20 @@ public class AreaTrigger : MonoBehaviour {
         if(handCollision && fingerCollision)
         {
             bothColliding = true;
+            HandInRegion = true;
         }
         else
         {
             bothColliding = false;
             updated = false;
+            HandInRegion = false;
         }
-        if (bothColliding && !updated)
-        {
-            HandInRegion = !HandInRegion;
-            updated = true;
-        }
+
+        //if (bothColliding && !updated)
+        //{
+        //    HandInRegion = !HandInRegion;
+        //    updated = true;
+        //}
         
 	
 	}
