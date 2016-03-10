@@ -3,10 +3,11 @@ using System.Collections;
 
 public class BrickLayer : MonoBehaviour {
 
-    static int numOfBricks = 1;
+    public static int numOfBricks = 6;
     public GameObject[] BricksParent = new GameObject[numOfBricks];
     public GameObject[] Bricks = new GameObject[numOfBricks];
     private AreaTrigger[] bricksTrigger = new AreaTrigger[numOfBricks];
+    private bool[] bricksLayed = new bool[numOfBricks];
 
     public GameObject HandBrick;
     private AreaTrigger handBrick;
@@ -65,6 +66,7 @@ public class BrickLayer : MonoBehaviour {
            
             
         }
+        
 
         //Dropping brick in place
         if (holdingBrick)
@@ -72,9 +74,13 @@ public class BrickLayer : MonoBehaviour {
            
             for (int k = 0; k < numOfBricks; k++)
             {
-                Bricks[k].SetActive(bricksTrigger[k].HandInRegion);
-                HandBrick.SetActive(!bricksTrigger[k].HandInRegion);
-                TableBrick.SetActive(bricksTrigger[k].HandInRegion);
+                if (bricksLayed[k] == false && bricksTrigger[k].HandInRegion)
+                {
+                    Bricks[k].SetActive(bricksTrigger[k].HandInRegion);
+                    HandBrick.SetActive(!bricksTrigger[k].HandInRegion);
+                    TableBrick.SetActive(bricksTrigger[k].HandInRegion);
+                    bricksLayed[k] = bricksTrigger[k].HandInRegion; //Update brick permanently layed
+                }
             }
             
         }
