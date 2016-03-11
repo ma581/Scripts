@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PickUpJoint : MonoBehaviour
 {
-    //public static bool holdingTool = false;
+    public static bool holdingTool = false;
     public GameObject HammerRegion; //Do  nothing 
     private AreaTrigger hammerAreaTrig;
 
@@ -40,19 +40,19 @@ public class PickUpJoint : MonoBehaviour
         {
             startPickTimer();
             dropTimerStarted = false;
-            //holdingTool = false;
+            holdingTool = false;
         }
          
         if (heldHammer.activeSelf && !dropTimerStarted)
         {
             startDropTimer();
             pickTimerStarted = false;
-            //holdingTool = true;
+            holdingTool = true;
         }
 
         if (pickTimerStarted)
         {
-            if (Time.time > pickTimerStart + delay)
+            if (Time.time > pickTimerStart + delay && holdingTool==false)
             {
                 pickUpAble();
             }

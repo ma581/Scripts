@@ -43,6 +43,7 @@ public class BrickLayer : MonoBehaviour {
         if (HandBrick.activeSelf)
         {
             holdingBrick = true;
+            PickUpJoint.holdingTool = true;
         }
         else
         {
@@ -59,12 +60,15 @@ public class BrickLayer : MonoBehaviour {
             //    TableBrick.SetActive(!f);
             //}
 
-            
-            HandBrick.SetActive(tableBrickTrigger.HandInRegion);
-            TableBrick.SetActive(!tableBrickTrigger.HandInRegion);
+            if (PickUpJoint.holdingTool == false)
+            {
+                HandBrick.SetActive(tableBrickTrigger.HandInRegion);
+                TableBrick.SetActive(!tableBrickTrigger.HandInRegion);
+                BrickOnTopOfCement.brickLayed = false;
+            }
 
-           
-            
+
+
         }
         
 
@@ -80,6 +84,16 @@ public class BrickLayer : MonoBehaviour {
                     HandBrick.SetActive(!bricksTrigger[k].HandInRegion);
                     TableBrick.SetActive(bricksTrigger[k].HandInRegion);
                     bricksLayed[k] = bricksTrigger[k].HandInRegion; //Update brick permanently layed
+                }
+                else
+                {
+                    PickUpJoint.holdingTool = false;
+                }
+
+                if(BrickOnTopOfCement.brickLayed == true)
+                {
+                    HandBrick.SetActive(false);
+                    TableBrick.SetActive(true);
                 }
             }
             

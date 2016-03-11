@@ -3,8 +3,9 @@ using System.Collections;
 
 public class BrickOnTopOfCement : MonoBehaviour {
 
-    Quaternion[] rotationArray = new Quaternion[2];
+    public static bool brickLayed = false;
 
+    Quaternion[] rotationArray = new Quaternion[2];
     public Transform BrickPrefab;
     Vector3 shiftInPosition = new Vector3(0f, 0.033f, 0f);
     bool hasCement = false;
@@ -34,12 +35,16 @@ public class BrickOnTopOfCement : MonoBehaviour {
 
     void OnCollisionEnter(Collision col)
     {
-        //if (!hasCement)
+        if (PickUpJoint.holdingTool == false)
         {
-            if (col.gameObject.tag == "shovel")
+            if (!hasCement)
             {
-                Instantiate(BrickPrefab, this.transform.position + shiftInPosition, Quaternion.Euler(finalRotation));
-                //hasCement = true;
+                if (col.gameObject.name == "HandBrick")
+                {
+                    Instantiate(BrickPrefab, this.transform.position + shiftInPosition, Quaternion.Euler(finalRotation));
+                    hasCement = true;
+                    brickLayed = true;
+                }
             }
         }
     }
